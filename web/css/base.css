@@ -1,0 +1,9 @@
+.nav-wrapper .brand-logo {
+
+    display: inline-flex !important;
+    position: inherit !important;
+}
+.nav-wrapper ul {
+
+    display: inline-flex !important;
+}
