@@ -1,0 +1,53 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}"/>
+{% endblock %}
+
+<div class="loginPage">
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form class="loginForm" action="{{ path("fos_user_security_check") }}" method="post">
+        {% if csrf_token %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+        {% endif %}
+
+
+        <h5 class="indigo-text">Please, login into your account</h5>
+        <div class="section"></div>
+
+        <div class="container">
+            <div class="z-depth-1 grey lighten-4 row"
+                 style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+
+                <div class='row'>
+                    <div class='col s12'>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='input-field col s12'>
+                        <input class='validate' type='text' id='username' name='_username' value="{{ last_username }}" required="required" />
+                        <label for='username'>{{ 'security.login.username'|trans }}</label>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='input-field col s12'>
+                        <input class='validate' type='password' name='_password' id='password' required="required" />
+                        <label for='password'>{{ 'security.login.password'|trans }}</label>
+                    </div>
+                </div>
+
+                <br/>
+                <div class='row'>
+                    <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}"
+                           class='col s12 btn btn-large waves-effect indigo'/>
+                </div>
+            </div>
+        </div>
+        <a href="{{ path('fos_user_registration_register') }}">Create account</a>
+    </form>
+</div>
