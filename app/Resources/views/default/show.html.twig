@@ -17,13 +17,49 @@
             </div>
             <div class="card-content">
                 <div class="row">
-                    <div class="col s5 offset-s2">
+                    <div class="col s9">
                         <h4 class="card-title grey-text text-darken-4">{{ toShow.getUsername() }}</h4>
                         <p class="medium-small grey-text">{{ toShow.getEmail() }}</p>
+
+                        <!-- Dropdown Trigger -->
+                        <a class='dropdown-button btn' href='#' data-activates='friendList'>List of friends</a>
+                        <!-- Dropdown Structure -->
+                        <ul id='friendList' class='dropdown-content'>
+                            {% if toShow.getFriends() is empty %}
+                                <li><a>None</a></li>
+                            {% else %}
+                                {% for friend in toShow.getFriends() %}
+                                    {% if friend is same as(user) %}
+                                        <li><a>You</a></li>
+                                    {% else %}
+                                        <li><a>{{ friend.getUsername() }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+
+
+                        {% if toShow is not same as(user) %}
+
+                            <!-- Dropdown Trigger -->
+                            <a class='dropdown-button btn' href='#' data-activates='mutualFriendList'>Common friends</a>
+                            <!-- Dropdown Structure -->
+                            <ul id='mutualFriendList' class='dropdown-content'>
+                                {% if commonFriends is empty %}
+                                    <li><a>None</a></li>
+                                {% else %}
+                                    {% for commonFriend in commonFriends %}
+                                        <li><a>{{ commonFriend.getUsername() }}</a></li>
+                                    {% endfor %}
+                                {% endif %}
+                            </ul>
+
+                        {% endif %}
+
                     </div>
 
                     {% if isFriend %}
-                        <div class="col s3 push-s3">
+                        <div class="col s3">
                             <form action="{{ path('showUser', {'id': toShow.getId() }) }}" method="post">
                                 <input type="hidden" name="toXFriend" value="{{ toShow.getId() }}"/>
                                 <input type="hidden" name="actionType" value="remove" />
@@ -34,7 +70,7 @@
                             </form>
                         </div>
                     {% else %}
-                        <div class="col s3 push-s3">
+                        <div class="col s3">
                             <form action="{{ path('showUser', {'id': toShow.getId() }) }}" method="post">
                                 <input type="hidden" name="toXFriend" value="{{ toShow.getId() }}"/>
                                 <input type="hidden" name="actionType" value="add"/>

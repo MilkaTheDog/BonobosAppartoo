@@ -69,7 +69,8 @@ class DefaultController extends Controller
         return $this->render('default/show.html.twig', [
             'user' => $user,
             'toShow' => $toShow,
-            'isFriend' => $user->getFriends()->contains($toShow)
+            'isFriend' => $user->getFriends()->contains($toShow),
+            'commonFriends' => array_intersect($user->getFriends()->toArray(), $toShow->getFriends()->toArray())
         ]);
     }
 }
