@@ -4,45 +4,54 @@
 
     {{ include('shared_components/topbar.html.twig') }}
 
+
     <div class="row">
-        <form class="col s12">
-            <div class="row">
-                <div class="input-field col s6">
-                    <input placeholder="Placeholder" id="first_name" type="text" class="validate">
-                    <label for="first_name">First Name</label>
+
+        <div class="col s12 m6">
+
+            <h4>Your friends</h4>
+            <hr />
+
+            {% for friend in user.getFriends() %}
+                <div class="col s8">
+                    {{ friend.getUsername() }}
                 </div>
-                <div class="input-field col s6">
-                    <input id="last_name" type="text" class="validate">
-                    <label for="last_name">Last Name</label>
+                <button class="btn col s2">
+                    <i class="material-icons">more_horiz</i>
+                </button>
+                <form action="{{ path("homepage") }}" method="post">
+                    <input type="hidden" name="toXFriend" value="{{ friend.getId() }}"/>
+                    <input type="hidden" name="actionType" value="remove"/>
+
+                    <button class="btn red col s2">
+                        <i class="material-icons">remove</i>
+                    </button>
+                </form>
+            {% endfor %}
+        </div>
+
+        <div class="col s12 m6">
+
+            <h4>List of bonobos</h4>
+            <hr />
+
+            {% for u in userList if u != user and u not in user.getFriends() %}
+                <div class="col s8">
+                    {{ u.getUsername() }}
                 </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input disabled value="I am not editable" id="disabled" type="text" class="validate">
-                    <label for="disabled">Disabled</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input id="password" type="password" class="validate">
-                    <label for="password">Password</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input id="email" type="email" class="validate">
-                    <label for="email">Email</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12">
-                    This is an inline input field:
-                    <div class="input-field inline">
-                        <input id="email" type="email" class="validate">
-                        <label for="email" data-error="wrong" data-success="right">Email</label>
-                    </div>
-                </div>
-            </div>
-        </form>
+                <button class="btn col s2">
+                    <i class="material-icons">more_horiz</i>
+                </button>
+                <form action="{{ path("homepage") }}" method="post">
+                    <input type="hidden" name="toXFriend" value="{{ u.getId() }}"/>
+                    <input type="hidden" name="actionType" value="add"/>
+
+                    <button class="btn green col s2">
+                        <i class="material-icons">add</i>
+                    </button>
+                </form>
+            {% endfor %}
+        </div>
+
     </div>
 {% endblock %}

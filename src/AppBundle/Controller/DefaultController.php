@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Bonobo;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,9 +14,33 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
+        /** @var \AppBundle\Entity\Bonobo $user */
+        $user = $this->getUser();
+        $bonoboRepo = $this->getDoctrine()->getRepository(Bonobo::class);
+
+        if ($request->isMethod('POST') && ($toXFriend = $request->request->get('toXFriend'))
+            && ($actionType = $request->request->get('actionType'))) {
+
+            if (!($toXFriend = $bonoboRepo->find($toXFriend)))
+                throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException("Friend not found");
+
+            /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+            $userManager = $this->container->get('fos_user.user_manager');
+
+            if ($actionType === "add") {
+
+                $user->addFriend($toXFriend);
+            } else if ($actionType === "remove") {
+
+                $user->removeFriend($toXFriend);
+            }
+
+            $userManager->updateUser($user);
+        }
+
         return $this->render('default/main.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            'user' => $user,
+            'userList' => $bonoboRepo->findAll()
         ]);
     }
 }
