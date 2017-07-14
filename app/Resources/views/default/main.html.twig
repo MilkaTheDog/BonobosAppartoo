@@ -1,11 +1,15 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}"/>
+{% endblock %}
+
 {% block body %}
 
     {{ include('shared_components/topbar.html.twig') }}
 
 
-    <div class="row">
+    <div class="row mainPage">
 
         <div class="col s12 m6">
 
@@ -13,20 +17,22 @@
             <hr />
 
             {% for friend in user.getFriends() %}
-                <div class="col s8">
-                    {{ friend.getUsername() }}
-                </div>
-                <button class="btn col s2">
-                    <i class="material-icons">more_horiz</i>
-                </button>
-                <form action="{{ path("homepage") }}" method="post">
-                    <input type="hidden" name="toXFriend" value="{{ friend.getId() }}"/>
-                    <input type="hidden" name="actionType" value="remove"/>
+                <div class="userRow row">
+                    <div class="col s7">
+                        {{ friend.getUsername() }}
+                    </div>
+                    <a href="{{ path('showUser', {'id': friend.getId() }) }}" class="btn actionBtn col s1 push-s1">
+                        <i class="material-icons">more_horiz</i>
+                    </a>
+                    <form action="{{ path("homepage") }}" method="post">
+                        <input type="hidden" name="toXFriend" value="{{ friend.getId() }}"/>
+                        <input type="hidden" name="actionType" value="remove"/>
 
-                    <button class="btn red col s2">
-                        <i class="material-icons">remove</i>
-                    </button>
-                </form>
+                        <button class="btn actionBtn red col s1 push-s1">
+                            <i class="material-icons">remove</i>
+                        </button>
+                    </form>
+                </div>
             {% endfor %}
         </div>
 
@@ -36,20 +42,22 @@
             <hr />
 
             {% for u in userList if u != user and u not in user.getFriends() %}
-                <div class="col s8">
-                    {{ u.getUsername() }}
-                </div>
-                <button class="btn col s2">
-                    <i class="material-icons">more_horiz</i>
-                </button>
-                <form action="{{ path("homepage") }}" method="post">
-                    <input type="hidden" name="toXFriend" value="{{ u.getId() }}"/>
-                    <input type="hidden" name="actionType" value="add"/>
+                <div class="userRow row">
+                    <div class="col s7">
+                        {{ u.getUsername() }}
+                    </div>
+                    <a href="{{ path('showUser', {'id': u.getId() }) }}" class="btn actionBtn col s1 push-s1">
+                        <i class="material-icons">more_horiz</i>
+                    </a>
+                    <form action="{{ path("homepage") }}" method="post">
+                        <input type="hidden" name="toXFriend" value="{{ u.getId() }}"/>
+                        <input type="hidden" name="actionType" value="add"/>
 
-                    <button class="btn green col s2">
-                        <i class="material-icons">add</i>
-                    </button>
-                </form>
+                        <button class="btn actionBtn green col s1 push-s1">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </form>
+                </div>
             {% endfor %}
         </div>
 

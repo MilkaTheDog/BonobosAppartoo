@@ -1,0 +1,15 @@
+.showPage .card-image {
+
+    height: 250px;
+}
+
+.showPage .card-image .activator {
+
+    border-radius: 2px 2px 0 0;
+    position: relative;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}

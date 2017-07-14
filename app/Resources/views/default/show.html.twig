@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/showPage.css') }}"/>
+{% endblock %}
+
+{% block body %}
+
+    {{ include('shared_components/topbar.html.twig') }}
+
+
+    <div class="container showPage">
+        <div class="card">
+            <div class="card-image waves-effect waves-block waves-light">
+                <img class="activator" src="http://www.planwallpaper.com/static/images/background_image_7.jpg"
+                     alt="user background">
+            </div>
+            <div class="card-content">
+                <div class="row">
+                    <div class="col s5 offset-s2">
+                        <h4 class="card-title grey-text text-darken-4">{{ toShow.getUsername() }}</h4>
+                        <p class="medium-small grey-text">{{ toShow.getEmail() }}</p>
+                    </div>
+
+                    {% if isFriend %}
+                        <div class="col s3 push-s3">
+                            <form action="{{ path('showUser', {'id': toShow.getId() }) }}" method="post">
+                                <input type="hidden" name="toXFriend" value="{{ toShow.getId() }}"/>
+                                <input type="hidden" name="actionType" value="remove" />
+
+                                <button class="btn red">
+                                    <i class="material-icons">remove</i>
+                                </button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="col s3 push-s3">
+                            <form action="{{ path('showUser', {'id': toShow.getId() }) }}" method="post">
+                                <input type="hidden" name="toXFriend" value="{{ toShow.getId() }}"/>
+                                <input type="hidden" name="actionType" value="add"/>
+
+                                <button class="btn green">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
