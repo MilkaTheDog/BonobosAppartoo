@@ -58,28 +58,67 @@
 
                     </div>
 
-                    {% if isFriend %}
-                        <div class="col s3">
-                            <form action="{{ path('showUser', {'id': toShow.getId() }) }}" method="post">
-                                <input type="hidden" name="toXFriend" value="{{ toShow.getId() }}"/>
-                                <input type="hidden" name="actionType" value="remove" />
 
-                                <button class="btn red">
-                                    <i class="material-icons">remove</i>
-                                </button>
-                            </form>
-                        </div>
+                    {% if toShow is not same as(user) %}
+
+                        {% if isFriend %}
+                            <div class="col s3">
+                                <form action="{{ path('showUser', {'id': toShow.getId() }) }}" method="post">
+                                    <input type="hidden" name="toXFriend" value="{{ toShow.getId() }}"/>
+                                    <input type="hidden" name="actionType" value="remove" />
+
+                                    <button class="btn red">
+                                        <i class="material-icons">remove</i>
+                                    </button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="col s3">
+                                <form action="{{ path('showUser', {'id': toShow.getId() }) }}" method="post">
+                                    <input type="hidden" name="toXFriend" value="{{ toShow.getId() }}"/>
+                                    <input type="hidden" name="actionType" value="add"/>
+
+                                    <button class="btn green">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
+
                     {% else %}
-                        <div class="col s3">
-                            <form action="{{ path('showUser', {'id': toShow.getId() }) }}" method="post">
-                                <input type="hidden" name="toXFriend" value="{{ toShow.getId() }}"/>
-                                <input type="hidden" name="actionType" value="add"/>
 
-                                <button class="btn green">
-                                    <i class="material-icons">add</i>
-                                </button>
-                            </form>
+                        <div class="col s3">
+
+                            <!-- Modal Trigger -->
+                            <a class="waves-effect waves-light btn orange" href="#editModal">
+                                <i class="material-icons">edit</i>
+                            </a>
+                            <!-- Modal Structure -->
+                            <div id="editModal" class="modal">
+
+                                <div class="container">
+
+                                    <form action="{{ path('showUser', {'id': user.getId() }) }}" method="post">
+                                        <input type="hidden" name="actionType" value="editProfile" />
+
+                                        <div class='row'>
+                                            <div class='input-field col s12'>
+                                                <input class='validate' type='text' id='username' name='_username' value="{{ user.getUsername() }}" required="required" />
+                                                <label for='username'>Username</label>
+                                            </div>
+                                        </div>
+                                        <input type="submit" id="_submit" name="_submit" value="Edit"
+                                               class='col s12 btn btn-large indigo' />
+
+                                    </form>
+
+                                </div>
+
+                            </div>
+
+
                         </div>
+
                     {% endif %}
 
                 </div>
@@ -89,4 +128,12 @@
     </div>
 
 
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function(){
+            $('.modal').modal();
+        });
+    </script>
 {% endblock %}

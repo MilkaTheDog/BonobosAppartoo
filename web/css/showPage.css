@@ -13,3 +13,8 @@
     bottom: 0;
     width: 100%;
 }
+
+#editModal {
+
+    padding: 50px 0 50px 0;
+}

@@ -25,15 +25,27 @@ class DefaultController extends Controller
         $userManager->updateUser($user);
     }
 
-    private function checkAndExecuteForm($request, $user)
+    private function checkAndExecuteFriendForm($request, $user, $actionType)
     {
-        if ($request->isMethod('POST') && ($toXFriend = $request->request->get('toXFriend'))
-            && ($actionType = $request->request->get('actionType'))) {
+        if (($toXFriend = $request->request->get('toXFriend'))) {
 
             if (!($toXFriend = $this->getDoctrine()->getRepository(Bonobo::class)->find($toXFriend)))
                 throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException("Friend not found");
 
             $this->addOrRemoveFriend($actionType, $user, $toXFriend);
+        }
+    }
+
+    private function checkAndEditProfle($request, $user)
+    {
+        if (($username = $request->request->get('_username')) && $username !== $user->getUsername())
+        {
+            /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+            $userManager = $this->container->get('fos_user.user_manager');
+
+            $user->setUsername($username);
+
+            $userManager->updateUser($user);
         }
     }
 
@@ -45,7 +57,12 @@ class DefaultController extends Controller
         /** @var \AppBundle\Entity\Bonobo $user */
         $user = $this->getUser();
 
-        $this->checkAndExecuteForm($request, $user);
+        if ($request->isMethod('POST') && ($actionType = $request->request->get('actionType'))
+            && in_array($actionType, array("add", "remove")))
+        {
+            $this->checkAndExecuteFriendForm($request, $user, $actionType);
+        }
+
 
         return $this->render('default/main.html.twig', [
             'user' => $user,
@@ -64,7 +81,18 @@ class DefaultController extends Controller
         if (!($toShow = $this->getDoctrine()->getRepository(Bonobo::class)->find($id)))
             throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException("Bonobo not found");
 
-        $this->checkAndExecuteForm($request, $user);
+
+        if ($request->isMethod('POST') && ($actionType = $request->request->get('actionType')))
+        {
+            if (in_array($actionType, array("add", "remove")))
+            {
+                $this->checkAndExecuteFriendForm($request, $user, $actionType);
+            }
+            else if ($actionType === "editProfile")
+            {
+                $this->checkAndEditProfle($request, $user);
+            }
+        }
 
         return $this->render('default/show.html.twig', [
             'user' => $user,
